@@ -6,6 +6,7 @@ import { DynamicSkillEngine } from "../src/skill-engine.js";
 import { renderPodUiHtml } from "../src/ui.js";
 import { TaskRecord, boundPayload, EpisodeRecord, BeliefRecord } from "../src/types.js";
 import { runSleepConsolidation } from "../src/consolidation.js";
+import worker from "../src/worker.js";
 
 describe("Autonomous Worker Pod Chassis Test Suite", () => {
   test("1. loadPodConfig applies defaults and environment overrides", () => {
@@ -331,5 +332,14 @@ describe("Autonomous Worker Pod Chassis Test Suite", () => {
     assert.equal(summary.beliefsSynthesized, 1, "Clustered episodes must synthesize 1 new belief");
     assert.equal(summary.episodesAnalyzed, 3);
     assert.ok(beliefsDb.has("belief_seo_seo_robots_probe"));
+  });
+
+  test("11. worker /health returns healthy status and land domain", async () => {
+    const response = await worker.fetch(new Request("http://localhost/health"), { DB: {} as any });
+
+    assert.equal(response.status, 200);
+    const body = await response.json() as { status: string; domain: string };
+    assert.equal(body.status, "healthy");
+    assert.equal(body.domain, "land");
   });
 });
