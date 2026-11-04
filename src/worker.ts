@@ -43,6 +43,7 @@ export default {
           name: config.name,
           role: config.role,
           lob: config.lob,
+          domain: config.lob,
           hasAiBinding: !!env.AI,
           edge: true,
           timestamp: Date.now(),
